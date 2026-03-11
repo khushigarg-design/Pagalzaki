@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Zaki 💖</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+
+        /* Background Floating Items */
+        #background-elements {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .floating-item {
+            position: absolute;
+            bottom: -50px;
+            animation: floatUp linear infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes floatUp {
+            to { transform: translateY(-110vh) rotate(360deg); }
+        }
+
+        /* Heart Trail */
+        .trail-heart {
+            position: fixed;
+            pointer-events: none;
+            font-size: 20px;
+            animation: fadeOutUp 1s ease-out forwards;
+            z-index: 50;
+        }
+
+        @keyframes fadeOutUp {
+            0% { opacity: 1; transform: scale(1) translateY(0); }
+            100% { opacity: 0; transform: scale(0.5) translateY(-30px); }
+        }
+
+        /* Glassmorphism Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 32px 0 rgba(255, 105, 135, 0.2);
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            z-index: 10;
+            position: relative;
+        }
+
+        h1 {
+            color: #d81b60;
+            margin-top: 0;
+            font-size: 28px;
+        }
+
+        /* The Love Jar */
+        .love-jar {
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .love-jar:active { transform: scale(0.95); }
+        
+        .jar-title { font-weight: 600; color: #ad1457; margin-bottom: 10px; }
+        
+        #reason-text {
+            font-size: 16px;
+            min-height: 48px;
+            transition: opacity 0.3s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Hold to Charge Heart */
+        .charge-section {
+            margin: 30px 0;
+        }
+
+        .charge-container {
+            display: inline-block;
+            position: relative;
+            font-size: 80px;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            user-select: none;
+            touch-action: none; /* Prevents scrolling while holding on mobile */
+            transition: transform 0.1s;
+        }
+
+        .charge-container:active { transform: scale(0.95); }
+
+        #heart-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0%; /* Starts empty */
+            color: #ff3366;
+            overflow: hidden;
+            display: flex;
+            align-items: flex-end;
+        }
+
+        #heart-status {
+            margin-top: 10px;
+            font-weight: 600;
+            color: #ad1457;
+        }
+
+        /* Wobbling Surprise Box */
+        .surprise-container { margin: 20px 0; }
+        #surprise-box {
+            font-size: 50px;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .wobble {
+            animation: wobble 1s ease-in-out infinite;
+        }
+
+        @keyframes wobble {
+            0%, 100% { transform: rotate(-10deg) translateY(0); }
+            50% { transform: rotate(10deg) translateY(-10px); }
+        }
+
+        /* Bottom Stickers */
+        .stickers {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 30px;
+            margin-top: 20px;
+        }
+
+        .sway { animation: sway 3s ease-in-out infinite; }
+        .bounce1 { animation: bounce 2s infinite; }
+        .bounce2 { animation: bounce 2.5s infinite 0.5s; } /* Delayed bounce */
+
+        @keyframes sway {
+            0%, 100% { transform: rotate(-15deg); }
+            50% { transform: rotate(15deg); }
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-15px); }
+            60% { transform: translateY(-7px); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="background-elements"></div>
+
+    <div class="glass-card">
+        <h1>I love you Zaki! 💖</h1>
+        <p style="font-size: 14px; color: #555;">Just a little something to remind you...</p>
+
+        <div class="love-jar" onclick="nextReason()">
+            <div class="jar-title">🫙 The Love Jar (Tap me!)</div>
+            <div id="reason-text">You have the sweetest smile.</div>
+        </div>
+
+        <div class="charge-section">
+            <div class="charge-container" id="heart-container">
+                ♡
+                <div id="heart-fill">♥</div>
+            </div>
+            <div id="heart-status">Hold to Charge a Hug</div>
+        </div>
+
+        <div class="surprise-container">
+            <div id="surprise-box" class="wobble" onclick="openBox()">🎁</div>
+            <div style="font-size: 12px; margin-top: 5px;">Tap the box!</div>
+        </div>
+
+        <div class="stickers">
+            <span class="bounce1">🫂</span>
+            <span class="sway">🥺</span>
+            <span class="bounce2">🧸</span>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. Background Floating Items (Sparkles, Blossoms, Hearts) ---
+        const bgContainer = document.getElementById('background-elements');
+        const items = ['🌸', '✨', '💖', '🤍', '🌸'];
+        
+        for(let i = 0; i < 25; i++) {
+            let el = document.createElement('div');
+            el.className = 'floating-item';
+            el.innerText = items[Math.floor(Math.random() * items.length)];
+            el.style.left = Math.random() * 100 + 'vw';
+            el.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            el.style.animationDuration = (Math.random() * 10 + 5) + 's';
+            el.style.animationDelay = (Math.random() * 5) + 's';
+            bgContainer.appendChild(el);
+        }
+
+        // --- 2. The Heart Trail ---
+        document.addEventListener('mousemove', createTrail);
+        document.addEventListener('touchmove', (e) => createTrail(e.touches[0]));
+
+        function createTrail(e) {
+            if (Math.random() > 0.3) return; // Don't spawn on EVERY single pixel to save performance
+            const heart = document.createElement('div');
+            heart.className = 'trail-heart';
+            heart.innerText = '💖';
+            heart.style.left = (e.clientX - 10) + 'px';
+            heart.style.top = (e.clientY - 10) + 'px';
+            document.body.appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 1000);
+        }
+
+        // --- 3. The Love Jar ---
+        const reasons = [
+            "You have the sweetest smile.",
+            "You always know how to make me laugh.",
+            "I love how safe I feel with you.",
+            "You're my favorite person to talk to.",
+            "Your hugs fix everything.",
+            "You work so hard and I'm proud of you.",
+            "Because you are exactly who you are."
+        ];
+        let reasonIndex = 0;
+        const reasonText = document.getElementById('reason-text');
+
+        function nextReason() {
+            reasonText.style.opacity = 0;
+            setTimeout(() => {
+                reasonIndex = (reasonIndex + 1) % reasons.length;
+                reasonText.innerText = reasons[reasonIndex];
+                reasonText.style.opacity = 1;
+            }, 300); // Fades out, changes text, fades back in
+        }
+
+        // --- 4. Wobbling Surprise Box & Corner Confetti ---
+        const box = document.getElementById('surprise-box');
+        let boxOpened = false;
+
+        function openBox() {
+            if (boxOpened) return;
+            boxOpened = true;
+            box.classList.remove('wobble'); // Stop the jumping
+            box.innerText = '🎉'; // Change emoji
+            
+            // Corner Confetti
+            var duration = 2000;
+            var end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 5, angle: 60, spread: 55, origin: { x: 0, y: 0.8 }, colors: ['#ff9a9e', '#fecfef', '#ffffff']
+                });
+                confetti({
+                    particleCount: 5, angle: 120, spread: 55, origin: { x: 1, y: 0.8 }, colors: ['#ff9a9e', '#fecfef', '#ffffff']
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+
+        // --- 5. Hold to Charge Heart ---
+        const heartContainer = document.getElementById('heart-container');
+        const heartFill = document.getElementById('heart-fill');
+        const heartStatus = document.getElementById('heart-status');
+        let holdTimer;
+        let charge = 0;
+        let isCharging = false;
+
+        function startCharge(e) {
+            e.preventDefault(); 
+            if (charge >= 100) return;
+            isCharging = true;
+            heartStatus.innerText = "Charging... 🥺";
+            
+            // Small initial vibration for mobile
+            if (navigator.vibrate) navigator.vibrate(50); 
+
+            holdTimer = setInterval(() => {
+                charge += 2.5; // Speed of charge
+                heartFill.style.height = charge + '%';
+                
+                if (charge >= 100) {
+                    clearInterval(holdTimer);
+                    isCharging = false;
+                    heartFill.style.height = '100%';
+                    heartStatus.innerText = "Hug Sent! 🫂💖";
+                    
+                    // The long digital squeeze vibration (pattern: vibrate, pause, vibrate, pause, long vibrate)
+                    if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 500]); 
+                    
+                    // Massive Explosion Confetti
+                    confetti({
+                        particleCount: 200,
+                        spread: 100,
+                        origin: { y: 0.5 },
+                        zIndex: 100,
+                        colors: ['#ff3366', '#ff9a9e', '#ffffff']
+                    });
+                }
+            }, 50);
+        }
+
+        function stopCharge(e) {
+            if(e) e.preventDefault();
+            clearInterval(holdTimer);
+            if (charge < 100 && isCharging) {
+                isCharging = false;
+                charge = 0;
+                heartFill.style.height = '0%';
+                heartStatus.innerText = "Hold to Charge a Hug";
+            }
+        }
+
+        // Mouse Events
+        heartContainer.addEventListener('mousedown', startCharge);
+        window.addEventListener('mouseup', stopCharge);
+        
+        // Touch Events for Mobile
+        heartContainer.addEventListener('touchstart', startCharge);
+        window.addEventListener('touchend', stopCharge);
+        window.addEventListener('touchcancel', stopCharge);
+    </script>
+</body>
+  </html>
+  
